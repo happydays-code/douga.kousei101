@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ジャンルと目的を選んで、今日のリール構成をポン！外部通信・登録不要のリール構成ガチャガチャ。">
+<title>リール構成ガチャガチャ</title>
+<style>
+/* 色・余白の設定。画像やフォントの読み込みはありません。 */
+:root{--paper:#fff9ee;--ink:#493b34;--muted:#77665c;--pink:#d55364;--rose:#fae2df;--mint:#dcece0;--yellow:#f6d581;--line:#e7d9c8;--white:#fffdf8;--radius:24px}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.85}button,a,input{ -webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer;color:inherit}button:disabled{cursor:default;opacity:.48}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #286c5d;outline-offset:5px}button,a{touch-action:manipulation}h1,h2,h3,p{margin:0}h1,h2,h3{line-height:1.5}h2{font-size:clamp(23px,5vw,32px);letter-spacing:.025em}h3{font-size:19px}p+p{margin-top:12px}[hidden]{display:none!important}
+.topbar{max-width:1060px;margin:auto;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}.brand{font-size:14px;letter-spacing:.08em;font-weight:800}.brand i{display:inline-block;width:15px;height:19px;background:linear-gradient(var(--pink) 50%,var(--white) 50%);border:1px solid var(--pink);border-radius:50%;transform:rotate(-25deg);margin-right:8px;vertical-align:middle}.small{font-size:13px;color:var(--muted)}main{max-width:980px;margin:auto;padding:36px 24px 60px;min-height:80vh}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.18em;color:#a34751;margin-bottom:14px}.hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:34px;padding:34px 0 44px}.hero h1{font-size:clamp(34px,5.4vw,53px);letter-spacing:.025em;line-height:1.45}.hero .tagline{font-weight:750;margin:22px 0 14px;font-size:18px}.intro{font-size:15px;color:var(--muted)}.pill{display:inline-block;border:1px solid var(--line);border-radius:30px;padding:3px 14px;font-size:12px;margin-bottom:18px;background:var(--white)}.primary{border:0;border-radius:16px;background:var(--pink);color:white;font-weight:750;min-height:56px;padding:15px 24px;box-shadow:0 4px 0 #ab3d4c;transition:transform .15s,background .15s}.primary:hover:not(:disabled){background:#bd4354;transform:translateY(-1px)}.primary:active:not(:disabled){transform:translateY(3px);box-shadow:none}.hero .primary{margin-top:26px}.secondary{border:1px solid var(--line);background:var(--white);border-radius:14px;min-height:50px;padding:12px 20px;font-weight:650}.text-button{border:0;background:none;padding:12px 4px;color:var(--muted);text-decoration:underline;text-underline-offset:4px}.trust{display:flex;justify-content:center;gap:20px;font-size:12px;color:var(--muted);flex-wrap:wrap}.how{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);padding-top:26px;gap:20px;margin-top:30px}.how b{display:block;font-size:14px}.how span{font-size:12px;color:var(--muted)}.num{color:var(--pink);font-size:12px;letter-spacing:.1em;margin-bottom:5px}
+/* CSSだけのカプセルトイ。ハンドル・落下・開封を別々に制御。 */
+.stage{position:relative;display:flex;flex-direction:column;align-items:center;max-width:100%;padding:20px 0 10px}.halo{position:absolute;inset:22px 0 50px;border-radius:50%;background:#f7ebd7;z-index:-1}.spark{position:absolute;color:#b87930;font-size:27px;top:28px;right:15%}.spark.left{top:140px;left:7%;font-size:18px}.machine{width:252px;max-width:100%;position:relative;filter:drop-shadow(0 12px 0 #dfcdb342)}.machine-top{width:206px;height:25px;background:#df7581;border-radius:65% 65% 12px 12px;margin:auto;border:3px solid #ae5861}.globe{height:170px;margin:0 20px;background:linear-gradient(120deg,#ffffffd9,#f7f4e299);border:5px solid #bc7777;border-bottom:0;border-radius:44px 44px 10px 10px;position:relative;overflow:hidden;box-shadow:inset 8px 0 0 #ffffff90}.globe:after{content:"";position:absolute;width:14px;height:63px;left:14px;top:16px;background:#fff9;border-radius:20px;transform:rotate(13deg)}.ball{position:absolute;bottom:10px;left:var(--x);width:55px;height:55px;border-radius:50%;border:2px solid #705b4938;background:linear-gradient(var(--c) 49%,#fff7e8 50%);transform:rotate(var(--r));box-shadow:inset -5px -5px 0 #79553110}.ball:nth-child(n+5){bottom:52px}.ball:nth-child(8){bottom:94px}.machine-body{height:156px;border:3px solid #ae5861;background:linear-gradient(100deg,#ea8e97,#e37c89);border-radius:18px 18px 30px 30px;padding-top:13px;position:relative}.machine-label{background:#fff4d9;border:1px solid #aa6958;border-radius:8px;text-align:center;width:174px;margin:auto;font-size:12px;line-height:1.5;font-weight:850;padding:5px;color:#7c4b45;letter-spacing:.07em}.machine-label small{display:block;font-size:9px;letter-spacing:.14em}.handle{position:absolute;top:61px;left:39px;width:57px;height:57px;border-radius:50%;border:4px solid #b96570;background:#fdf4de;box-shadow:0 3px 0 #a9505d}.handle:before{content:"";position:absolute;inset:20px -5px;background:#f8d587;border:2px solid #a77c43;border-radius:7px}.coin{position:absolute;right:41px;top:72px;border:4px solid #f6b4b8;border-radius:20px;background:#8d5159;width:14px;height:32px}.outlet{width:89px;height:34px;position:absolute;bottom:7px;left:111px;background:#80515a;border:5px solid #c36875;border-radius:18px 18px 8px 8px;box-shadow:inset 0 5px 0 #5c3940}.feet{height:13px;margin:0 15px;background:#ad6269;border-radius:0 0 10px 10px}.shelf{height:13px;width:290px;max-width:100%;border-radius:50%;background:#dbc9af66;margin-top:8px}.floating-label{position:absolute;right:-4px;top:7px;transform:rotate(9deg);border:1px solid #c29343;background:var(--yellow);border-radius:50%;width:69px;height:69px;text-align:center;padding-top:13px;font-size:12px;font-weight:800;line-height:1.7}.gacha-space{min-height:110px;display:grid;place-items:center;position:relative;width:100%}.capsule{--cap:#ed929f;width:84px;height:84px;border:0;padding:0;position:relative;background:none;filter:drop-shadow(0 5px 3px #8667482b)}.capsule span{position:absolute;left:0;width:84px;height:42px;border:2px solid #8c76634d;transition:transform .35s,opacity .35s}.capsule .upper{top:0;border-radius:84px 84px 0 0;background:var(--cap);box-shadow:inset 8px 4px 0 #fff4}.capsule .lower{bottom:0;border-radius:0 0 84px 84px;background:#fffdf2;box-shadow:inset -5px -5px 0 #ede1c9}.capsule.open .upper{transform:translate(-22px,-30px) rotate(-30deg);opacity:0}.capsule.open .lower{transform:translate(22px,20px) rotate(30deg);opacity:0}.drop{animation:drop .5s ease-out}.rolling .handle{animation:spin .85s ease-in-out}.rolling{animation:wobble .18s 5}.sfx{font-weight:800;color:#a34751;min-height:34px;text-align:center}.pop{position:absolute;font-size:27px;font-weight:900;color:var(--pink);pointer-events:none}.gacha-screen{text-align:center;max-width:580px;margin:auto}.gacha-screen .stage{max-width:360px;margin:10px auto 0}.gacha-screen .primary{width:100%;max-width:360px}.selection-summary{font-size:13px;color:var(--muted);margin:12px 0}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes wobble{25%{transform:rotate(-2deg)}75%{transform:rotate(2deg)}}@keyframes drop{0%{transform:translateY(-50px) rotate(-25deg);opacity:0}65%{transform:translateY(6px) rotate(12deg);opacity:1}100%{transform:translateY(0) rotate(0)}}
+/* 選択画面と結果。320pxでも収まる可変幅。 */
+.wizard{max-width:680px;margin:0 auto}.progress{display:flex;gap:8px;margin-bottom:32px}.progress span{flex:1;height:5px;background:#e8dfd2;border-radius:8px}.progress .done{background:var(--pink)}.question-note{color:var(--muted);font-size:14px;margin-top:12px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:25px}.choices.single{grid-template-columns:1fr}.choice{display:flex;gap:12px;align-items:center;text-align:left;border:1px solid var(--line);border-radius:17px;background:var(--white);padding:17px;min-height:75px;line-height:1.6;font-size:15px;font-weight:650;box-shadow:0 3px 0 #e5d8c535}.choice:hover{border-color:#c47780}.choice[aria-pressed=true]{background:var(--rose);border:2px solid #bd5262;padding:16px}.choice-icon{font-size:21px;flex:none;width:30px;text-align:center}.checkmark{margin-left:auto;flex:none;border:1px solid #baa99b;border-radius:50%;width:22px;height:22px;display:grid;place-items:center;font-size:13px}.choice[aria-pressed=true] .checkmark{background:var(--pink);color:white;border:0}.nav{display:flex;align-items:center;justify-content:space-between;margin-top:28px;gap:18px}.nav .primary{min-width:160px}.result{max-width:680px;margin:auto}.result-heading{text-align:center;margin-bottom:28px}.badge{display:inline-block;background:var(--mint);color:#355d4a;border-radius:99px;font-size:13px;padding:5px 17px;font-weight:750;margin:15px 0}.result-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:0 7px 0 #e9dece60;position:relative}.result-card:before{content:"";position:absolute;left:28px;right:28px;top:0;border-top:5px solid #e88d96;border-radius:0 0 10px 10px}.theme{font-size:23px;margin:4px 0 16px}.context{display:grid;gap:5px;font-size:13px;color:var(--muted);border-bottom:1px dashed var(--line);padding-bottom:20px;margin-bottom:24px}.script-row{border-left:2px solid #efd9d6;padding:0 0 25px 20px;margin-left:7px}.script-row:last-child{padding-bottom:0}.script-row h3{font-size:12px;letter-spacing:.05em;color:#9a4351;position:relative;margin-bottom:8px}.script-row h3:before{content:"";position:absolute;left:-26px;top:3px;width:10px;height:10px;border:2px solid var(--white);background:#d97887;border-radius:50%}.script-row p{font-size:16px;white-space:pre-line;overflow-wrap:anywhere}.edit-hint{background:#f7f0e4;padding:14px;border-radius:12px;font-size:13px;color:var(--muted);margin-top:24px}.actions{display:grid;gap:12px;margin:24px 0}.actions .primary{font-size:18px}.notice{font-size:12px;color:var(--muted);margin:18px 0;line-height:1.8}.section{margin-top:34px;padding:26px;border:1px solid var(--line);border-radius:var(--radius);background:var(--white)}.section h2{font-size:24px}.checklist{display:grid;gap:2px;margin:20px 0}.checklist label{display:flex;align-items:center;gap:12px;min-height:47px;cursor:pointer;font-size:14px}.checklist input{width:20px;height:20px;flex:none;accent-color:#aa4353}.human-message{border-top:1px dashed var(--line);padding-top:20px;font-size:15px}.human-message strong{color:#a34452}.reuse{background:#edf4ed}.reuse-item{padding-top:20px;margin-top:18px;border-top:1px solid #ccdacc}.reuse-item h3{font-size:15px;margin-bottom:8px}.reuse-item p{font-size:14px;white-space:pre-line}.course{background:#f6e4df;text-align:center}.course p{font-size:14px;margin-top:20px}.course a{display:block;text-decoration:none;margin-top:25px;line-height:1.6}.course strong{color:#993e4e}footer{text-align:center;border-top:1px solid var(--line);padding:25px 20px;color:var(--muted);font-size:11px}.copy-status{min-height:24px;font-size:13px;text-align:center;color:#355d4a}textarea{width:100%;min-height:250px;padding:14px;font:inherit;border:1px solid var(--line);border-radius:12px}dialog{width:min(90vw,600px);max-height:85vh;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--ink);padding:24px}dialog::backdrop{background:#493b3470}dialog button{margin-top:12px}
+@media(max-width:650px){.topbar{padding:17px 18px}.topbar .small{font-size:10px}main{padding:25px 18px 45px}.hero{grid-template-columns:1fr;gap:8px;text-align:center;padding:6px 0 28px}.hero h1{font-size:36px}.hero .tagline{font-size:15px;margin:16px 0 10px}.hero .intro{font-size:13px}.hero .primary{width:100%;margin-top:20px}.hero-art{grid-row:2}.hero .stage{max-width:330px;margin:auto;transform:scale(.88);margin-top:-10px;margin-bottom:-32px}.hero-copy{display:contents}.hero-copy>*{grid-column:1}.hero-copy .eyebrow,.hero-copy .pill{display:none}.hero h1{grid-row:1}.hero .tagline{grid-row:3}.hero .intro{grid-row:4}.hero .primary{grid-row:5}.how{gap:12px;margin-top:22px;padding-top:22px}.how b{font-size:12px}.how span{font-size:11px}.trust{gap:12px;font-size:11px}.choices{gap:9px}.choice{font-size:13px;padding:13px;gap:7px}.choice[aria-pressed=true]{padding:12px}.choice-icon{width:23px;font-size:18px}.checkmark{width:19px;height:19px}.result-card,.section{padding:22px 18px}.theme{font-size:21px}.result-card:before{left:18px;right:18px}.section h2{font-size:22px}.nav .primary{min-width:140px}.floating-label{right:0}}
+@media(max-width:360px){.brand{font-size:12px}.choices{grid-template-columns:1fr}.hero h1{font-size:31px}.topbar .small{font-size:9px}.primary{padding:15px 16px}.how{gap:8px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="topbar"><span class="brand"><i aria-hidden="true"></i>REEL GACHA</span><span class="small">ひらめき、ひとつ持ち帰ろう。</span></header>
+<main id="app"></main>
+<footer>登録不要・入力内容の保存なし・外部通信なし<br>REEL GACHA · あなたらしい発信の、小さなきっかけ。</footer>
+<dialog id="copyDialog" aria-labelledby="copyTitle"><h2 id="copyTitle">構成をコピー</h2><p class="small">下の文章を選択してコピーできます。</p><textarea id="copyText" readonly aria-label="今日のリール構成"></textarea><button class="secondary" id="closeDialog">閉じる</button></dialog>
+<script>
+'use strict';
+// ===== 設定値：無料講座の公開URLはここだけ変更してください =====
+const FREE_COURSE_URL = "#";
+const APP_TITLE = "リール構成ガチャガチャ";
+const TEXT = {tagline:'今日、何投稿する？をガチャで決めよう♪', disclaimer:'このアプリは投稿アイデア・構成のヒントを提供するツールです。成果を保証するものではありません。'};
+// ===== ジャンルデータ =====
+const GENRES = [
+ {name:'子育て・教育・親子',icon:'♧'}, {name:'健康・美容・ダイエット',icon:'✿'},
+ {name:'占い・スピリチュアル',icon:'☾'}, {name:'心理・人間関係・恋愛',icon:'♡'},
+ {name:'起業・副業・お金・働き方',icon:'↗'}, {name:'ハンドメイド・出版・クリエイター',icon:'✂'},
+ {name:'AI・IT・デザイン',icon:'✧'}, {name:'その他・まだ決まっていない',icon:'…'}
+];
+// ===== ターゲットデータ：ジャンル順、各5件 =====
+const TARGETS = [
+ ['子育てに疲れているママ','仕事と育児を両立したいママ','子どもの才能を伸ばしたいママ','自分の時間が欲しいママ','子どもとの関係に悩んでいるママ'],
+ ['忙しくて自分のケアが後回しの女性','何度もダイエットに挫折している女性','40代以降の体の変化が気になる女性','美容を楽しみたい女性','無理なく健康習慣を続けたい女性'],
+ ['自分の才能を知りたい人','恋愛について悩んでいる人','仕事の方向性に迷っている人','人間関係について悩んでいる人','これからの自分について考えたい人'],
+ ['人に気を遣いすぎて疲れてしまう人','自分の気持ちを言葉にしたい人','パートナーとの会話を大切にしたい人','人との距離感に迷っている人','自分にやさしく向き合いたい人'],
+ ['起業の最初の一歩に迷っている人','副業と本業を両立したい人','お金の管理を見直したい人','自分に合う働き方を探している人','商品やサービスの伝え方に悩む人'],
+ ['初めて作品を届けたい人','制作を続ける時間が欲しい人','作品の魅力を言葉にしたい人','自分らしい表現を探している人','制作の裏側や作り手の想いを知りたい人'],
+ ['AIを初めて使ってみたい人','ITツールが苦手な人','デザインの見やすさを整えたい人','日々の作業を少し楽にしたい人','自分の発信にツールを活かしたい人'],
+ ['昔の自分に伝えたいこと','最近、人からよく聞かれること','失敗して学んだこと','最近知って面白かったこと','自分が人より少し詳しいこと']
+];
+// ===== テーマデータ：各ジャンル15件。各ターゲットと相性のよい3件を配置 =====
+const THEMES = [
+ ['がんばりすぎた日の小さな休憩','家事のハードルを下げた工夫','頼ることへのためらい','朝の支度の段取り','仕事終わりの切り替え','家族で予定を共有する工夫','子どもの「好き」の見つけ方','できたことを一緒に喜ぶ時間','遊びから気づいた興味','ひとり時間のつくり方','5分だけ楽しむ自分の趣味','予定に余白をつくる工夫','子どもの話を聞くタイミング','言いすぎた後の声のかけ方','親子で気持ちを伝える工夫'],
+ ['自分のケアを思い出すきっかけ','忙しい日の身支度','ひと息つく時間の確保','続け方を見直した経験','数字だけで振り返らない記録','小さく始める習慣づくり','日々の体調をメモする工夫','無理をしない予定の立て方','気になることを相談する準備','お気に入りのケア時間','コスメを選ぶときの楽しみ','自分らしいメイクの工夫','生活に合わせた習慣の置き方','休む日も含めた記録','気負わず続けるための環境'],
+ ['好きなことを書き出す時間','人から喜ばれた経験','自分の得意を振り返る問い','恋愛で大切にしたい価値観','自分の気持ちを整理するノート','相手に期待していることの振り返り','仕事で心が動いた瞬間','選択に迷ったときの自分への問い','働くうえで大切にしたいこと','心地よい距離感の振り返り','人との関わりで感じた気づき','自分の気持ちに耳を傾ける時間','未来の自分への手紙','占いを対話のきっかけにした経験','日々の小さな選択の振り返り'],
+ ['人に合わせすぎた日の振り返り','返事を急がない工夫','ひとりでひと息つく時間','気持ちをメモする習慣','伝えたいことを整理する順番','自分の言葉でお願いする工夫','落ち着いて話せる時間づくり','感謝を具体的に伝えた経験','会話ですれ違ったときの振り返り','予定を断るときの言葉選び','連絡のペースの伝え方','自分にとって心地よい関係','できたことを振り返る習慣','自分への言葉のかけ方','比べてしまう日の過ごし方'],
+ ['初めてのサービス案の整理','小さな行動の決め方','相談する前にまとめたメモ','作業時間の区切り方','やることを減らした経験','本業と副業の予定管理','支出を見える形にする工夫','仕事用の記録を整理する習慣','お金について学ぶ時間づくり','理想の一週間の書き出し','得意な仕事の振り返り','働く場所と時間の見直し','お客様の言葉を集める工夫','サービスの説明を短くする練習','届けたい相手を考える時間'],
+ ['初めて作品を紹介した日の話','作品写真の背景選び','届けるときのひと工夫','制作時間の小さな区切り','道具を使いやすく置く工夫','つくりかけの作品との付き合い方','作品のこだわりの伝え方','素材を選んだ理由','タイトルに込めた想い','好きな表現を集めるノート','試作品から気づいたこと','自分らしい色の選び方','完成までの小さな工程','制作で迷った選択','作品を届けた後の気づき'],
+ ['AIへの依頼文を整理する工夫','AIの回答を自分で確かめる習慣','AIに任せる作業の選び方','初めてのツールの試し方','操作メモを残す工夫','ファイルを見つけやすくする整理','文字の大きさの比べ方','余白を整えた制作例','色数を絞ったデザイン','繰り返す作業の棚卸し','自分用テンプレートのつくり方','作業の順番を見直す時間','投稿づくりの役割分担','自分の言葉に直すひと手間','スマホで仕上がりを確認する習慣'],
+ ['始める前に気にしていたこと','あの頃に知りたかった工夫','小さな一歩を踏み出した日','よく聞かれる質問への答え','自分なりの選び方','日常で使っている工夫','うまくいかなかった日の振り返り','次に試した小さな変更','遠回りから見つけたこと','日常で出会った新しい視点','試してみて気づいたこと','誰かに話したくなった発見','普段何気なくしている工夫','好きだから続いている習慣','初めての人に伝えたいポイント']
+];
+const PURPOSES = ['共感してほしい','保存してほしい','フォローしてほしい','自分を知ってほしい','専門性を伝えたい','商品・サービスに興味を持ってほしい','プロフィールやLINEへ来てほしい'];
+const TYPES = ['共感型','意外な事実型','失敗談型','Before → After型','3選型','NG型','ストーリー型','本音型','おまかせ'];
+// ===== フックデータ：6カテゴリー × 18件 = 108件（手書き・編集可能） =====
+const HOOKS = {
+ empathy:['これ、私だけだと思っていました。','がんばっているのに、空回りする日もありますよね。','「今日はもう無理」って思った日の話。','こんな小さなことで悩むの、私だけ？','できなかったことばかり数えていませんか？','誰かと比べて、焦ってしまったあなたへ。','ちゃんとしなきゃ、で疲れていた私へ。','うまく言えないけど、気になること。','「わかる」と言ってもらえて、ほっとしました。','ひとりで抱えていた頃の私に伝えたい。','やりたいのに、手が止まる日もある。','「私には難しいかも」と思っていました。','そのモヤモヤ、私にも覚えがあります。','人には言いにくかった、小さな悩み。','今、少し立ち止まっているあなたへ。','がんばれない日、私はこうしていました。','［お客様の言葉］って、思うことありませんか？','思いどおりにいかない日の、小さな工夫。'],
+ surprise:['思い込んでいたことを、見直してみました。','意外だったのは、［実際に気づいたこと］でした。','足す前に、引いてみた話。','いつもの順番を変えてみたら。','小さな違いに、あとから気づきました。','よさそうに見えて、私には合わなかったこと。','遠回りだと思っていた時間の話。','「普通はこう」を一度置いてみました。','見方を変えるきっかけになった一言。','当たり前にしていたこと、言葉にできますか？','予想と違った、私の体験を話します。','最初の印象だけでは、わからなかったこと。','実は、裏側ではこんな工夫をしています。','大きな変更より、先に試したこと。','見落としていたのは、ここでした。','「もっと」より「少し」を選んだ話。','試す前と後で、考えが変わったこと。','私の思い込みと、実際の経験を比べてみます。'],
+ failure:['昔の私は、ここでつまずいていました。','うまくいかなかった日のことを話します。','最初からできたわけではありません。','張り切りすぎて、続かなかった話。','準備ばかりで、動けなかった私へ。','あの失敗から、ひとつ変えたこと。','遠回りした私が、今なら見直すこと。','人のやり方を、そのまま真似していました。','つい後回しにして、困ったこと。','「これでいいか」で見落としたこと。','失敗メモを読み返して、気づきました。','ひとりで何とかしようとしていた頃。','やり直したから、見えたこと。','一度やめたことを、小さく再開した話。','あのときの私に、ひとこと言うなら。','うまく伝わらなかった理由を振り返ります。','私には続けにくかった方法を話します。','反省だけで終わらせないために、試したこと。'],
+ knowhow:['まずは、ここから整理してみませんか？','私が試している、小さな工夫を紹介します。','迷ったときに見返す、私のチェックポイント。','始める前に、書き出していること。','［テーマ］について、3つに分けて話します。','忙しい日のために、先に決めていること。','「何から？」と聞かれたら、私はこう答えます。','私なりの選び方を、順番に紹介します。','よく聞かれる質問に、私の経験から答えます。','いつも使っているメモの中身。','ひとつずつ見直すなら、この順番。','比べるときに、私が見ているポイント。','初めてのときに知りたかった、準備の話。','続けるために、私が減らしたこと。','今日の私が、試してみたい小さな一歩。','忘れないように、まとめておきました。','自分に合うか考えるための、3つの問い。','私のやり方を、具体例でお見せします。'],
+ honest:['本当は、少しためらっていました。','きれいにまとめる前の、本音を話します。','私が大事にしたいのは、ここです。','最近、考えが変わったことがあります。','得意そうと言われるけど、迷う日もあります。','無理に好きにならなくてもいいと思った話。','私が今、手放そうとしていること。','ずっと言葉にできなかった想い。','人と違っても、選びたいことがあります。','立ち止まって、考え直したこと。','背伸びをやめて、伝えたかったこと。','「すごい」より、うれしかった一言。','私がこの発信を続けたい理由。','今の私には、これくらいが心地いい。','答えが出ていないことも、あります。','あえて、完成していない話をします。','誰かの正解より、自分の経験を話したい。','これからも大切にしたい、小さな約束。'],
+ service:['このサービスに込めた想いを話します。','よくいただく質問に、ひとつ答えます。','お届けする前に、私が確認していること。','この形にしたのには、理由があります。','どんな人に届けたいのか、考えてみました。','作り手として、ここは大切にしています。','はじめての方に、知っておいてほしいこと。','サービスの裏側を、少しだけ紹介します。','ご相談の前に、整理できること。','選ぶときに見てほしいポイントがあります。','内容を決めるとき、迷ったこと。','よくある疑問を、具体例で紹介します。','私がサポートできることを整理しました。','お申し込みの前に、お伝えしたいこと。','なぜ、この方法を選んでいるのか。','ひとつの声から、見直したことがあります。','お届けまでの流れを紹介します。','私の活動と、［テーマ］のつながり。']
+};
+// ===== 構成テンプレート：8タイプ × 2 = 16件。[]は本人が埋める箇所 =====
+const STRUCTURES = [
+ {type:0,name:'共感ストーリー型',categories:['empathy'],steps:[['共感','［相手が実際に使う言葉で、{theme}にまつわる悩みを1つ］'],['あなたの体験','「私も以前は…」\n［あなた自身の具体的な場面］'],['気づき','［その経験から気づいたことを、押しつけずにひとこと］']]},
+ {type:0,name:'あるある・小さな一歩型',categories:['empathy'],steps:[['あるある','［{theme}で、相手に心当たりがありそうな場面］'],['寄り添うひとこと','［その気持ちを否定せずに受け止める言葉］'],['小さな一歩','［あなたが試した無理のない工夫を1つ］']]},
+ {type:1,name:'思い込みをほどく型',categories:['surprise'],steps:[['以前の考え','［{theme}について、自分が思い込んでいたこと］'],['実際の経験','［思い込みと違った出来事。事実と感想を分けて］'],['新しい視点','［今はどう考えているか。誰にでも当てはまるとは断定しない］']]},
+ {type:1,name:'意外な裏側を見せる型',categories:['surprise'],steps:[['表から見えること','［{theme}について、外から見える一場面］'],['裏側の工夫','［意外に思われそうな準備や小さな工夫を実物で見せる］'],['理由','［その工夫をしている理由と、参考にする際の条件］']]},
+ {type:2,name:'失敗からの気づき型',categories:['failure'],steps:[['つまずき','［{theme}でうまくいかなかった自分の経験］'],['振り返り','［今振り返ると見落としていたこと］'],['変えたこと','［次に試した具体的な変更を1つ。結果は実体験の範囲で］']]},
+ {type:2,name:'あの頃の私へ型',categories:['failure'],steps:[['過去の自分','［{theme}で迷っていたときの状況］'],['当時の気持ち','［そのとき何を考えていたか、あなたの言葉で］'],['今なら伝えたいこと','［同じ場面にいる相手へ伝えたい、具体的な一言］']]},
+ {type:3,name:'工夫のBefore → After型',categories:['surprise','failure'],steps:[['Before','［{theme}を見直す前の状況を、言葉や手元の映像で］'],['変えたこと','［変えた手順や考え方を1つ］'],['After','［実際の変化と、まだ難しいこと。誇張せず条件も添える］']]},
+ {type:3,name:'考え方のBefore → After型',categories:['honest','surprise'],steps:[['以前の考え','［以前、{theme}をどう考えていたか］'],['きっかけ','［考えが変わるきっかけになった出来事］'],['今の考え','［今大切にしていること。過去の自分も否定せずに］']]},
+ {type:4,name:'小さな工夫3選型',categories:['knowhow'],steps:[['工夫 01','［{theme}について、あなたが実際に試した工夫を1つ］'],['工夫 02','［別の工夫と、試しやすい場面］'],['工夫 03','［さらに1つ。最後に、最初に選ぶならどれかを添える］']]},
+ {type:4,name:'見直すポイント3選型',categories:['knowhow'],steps:[['ポイント 01','［{theme}で最初に確かめたいことと理由］'],['ポイント 02','［見落としやすいことを具体例で］'],['ポイント 03','［仕上げに確認したいこと。できる範囲で試す提案］']]},
+ {type:5,name:'私が見直したNG型',categories:['failure','knowhow'],steps:[['自分のNG例','［{theme}で自分には合わなかった行動。相手を責めない］'],['合わなかった理由','［当時の状況と、難しかった点］'],['代わりに試したこと','［選択肢として示せる別の方法。効果を断定しない］']]},
+ {type:5,name:'やりすぎを減らす型',categories:['failure','honest'],steps:[['やりすぎていたこと','［{theme}で必要以上にがんばっていたこと］'],['立ち止まった理由','［自分が負担に感じた場面］'],['減らした工夫','［省いたことと、今も大切にしていること］']]},
+ {type:6,name:'きっかけと想い型',categories:['honest','empathy'],steps:[['ある日の出来事','［{theme}にまつわる、実際の小さな出来事］'],['心が動いた瞬間','［その場で感じたことを、短い言葉で］'],['今につながる想い','［その経験が、今の発信や活動にどうつながっているか］']]},
+ {type:6,name:'活動の裏側ストーリー型',categories:['honest','service'],steps:[['始まり','［{theme}を大切にするようになったきっかけ］'],['途中の迷い','［試行錯誤したことを、実物や当時のメモとともに］'],['今の選択','［今の活動で工夫していることと、届けたい想い］']]},
+ {type:7,name:'大切にしたい本音型',categories:['honest'],steps:[['本音','［{theme}について、今感じていること］'],['背景','［そう感じるようになった自分の経験］'],['大切にしたいこと','［これから選びたいことを、あなた自身の言葉で］']]},
+ {type:7,name:'迷いも伝える本音型',categories:['honest'],steps:[['迷っていたこと','［{theme}について、言うのをためらっていた気持ち］'],['言葉にした理由','［今なら伝えたいと思ったきっかけ］'],['相手へのひとこと','［同じ気持ちの相手に、答えを決めつけずに伝えたいこと］']]}
+];
+// ===== CTAデータ：目的ごとに5件、合計35件 =====
+const CTAS = [
+ ['似た経験はありますか？よかったらコメントで教えてね。','「わかる」と思ったら、いいねで教えてね。','あなたはどう感じましたか？話せる範囲で聞かせてね。','同じ気持ちになったことがある方は、ひとこと残してね。','あなたの小さな工夫も、よかったらコメントで教えてね。'],
+ ['あとで見返したい方は、保存しておいてね。','自分のペースで試す日のために、保存してね。','迷ったときのメモとして、保存しておいてね。','振り返る時間に使えるよう、保存がおすすめです。','今日できなくても大丈夫。気になったら保存してね。'],
+ ['これからも私の経験や工夫を届けます。気になったらフォローしてね。','同じテーマの発信を続けていきます。フォローして見に来てね。','自分に合う工夫を一緒に探したい方は、フォローしてね。','次の投稿も読んでみたいと思ったら、フォローしてね。','こんな発信が気になる方は、フォローしてもらえたらうれしいです。'],
+ ['私が大切にしていること、少し伝わったらうれしいです。','あなたが大切にしていることも、よかったら教えてね。','こんな想いで発信しています。気になったら他の投稿も見てね。','私の活動については、プロフィールにもまとめています。','今日の話で気になったことがあれば、コメントで教えてね。'],
+ ['選び方のヒントになったら、保存しておいてね。','もっと知りたい点があれば、コメントで教えてね。','次に扱ってほしいテーマを、よかったら教えてね。','関連する工夫は他の投稿でも紹介しています。','自分の状況に合う部分を、振り返るきっかけにしてね。'],
+ ['［商品・サービス名］では、［実際のサポート内容］をお届けしています。気になる方はプロフィールへ。','この考え方を活かした［商品・サービス名］の詳細は、プロフィールにまとめています。','［商品・サービス名］の内容や対象は、プロフィールから確認できます。','［具体的な悩み］を相談したい方へ。［サービス名］についてはプロフィールをご覧ください。','自分に合う内容か知りたい方は、プロフィールの［案内先］をご覧ください。'],
+ ['もう少し知りたい方は、プロフィールの案内を見てね。','［案内している内容］は、プロフィールのリンクから確認できます。','［LINEで実際に届けている内容］が気になる方は、プロフィールからLINEへどうぞ。','活動やサービスの詳しい内容は、プロフィールにまとめています。','［実際に用意している案内］を読みたい方は、プロフィールの［リンク名］へどうぞ。']
+];
+// ===== Storiesテンプレート：構成タイプごとに2案 =====
+const STORIES = [
+ ['「{theme}で、こんな気持ちになったことある？」→「ある／今はない」のアンケート→今日のリールを紹介。','自分のあるあるを1つ紹介→「あなたはどう？」と質問→続きはリールへ。'],
+ ['「{theme}、私はこう思い込んでいました」→あなたはどう思う？とアンケート→実体験をリールで紹介。','表から見える姿と裏側を1枚ずつ→意外だった点を聞く→リールへ。'],
+ ['「{theme}で、私がつまずいた話」→当時のメモや状況→気づきをまとめたリールへ。','失敗したときの気持ちを短く紹介→似た経験を質問→リールをシェア。'],
+ ['「{theme}を見直す前と後」→変えたことを1つ見せる→詳しい経緯はリールへ。','以前と今の考えを2枚で紹介→「どちらの気持ちに近い？」→リールへ。'],
+ ['「{theme}の工夫、どれが気になる？」→3つの見出しからアンケート→リールで具体例を紹介。','3つのうち1つだけ先に紹介→残りの見出しを見せる→リールへ。'],
+ ['「{theme}で、私が見直したこと」→自分に合わなかった理由→代わりの工夫はリールへ。','やりすぎていたことを紹介→「似た経験ある？」のアンケート→リールへ。'],
+ ['「実は今日、{theme}について考えていました」→きっかけになった場面→リールへ。','制作や活動の一場面→そのときの想いをひとこと→背景を話したリールへ。'],
+ ['「{theme}について、今の本音」→自分の言葉を1つ→リールで背景を紹介。','迷っていたことをひとこと→「あなたはどう感じる？」の質問→リールへ。']
+];
+// ===== Threadsテンプレート：構成タイプごとに2案 =====
+const THREADS = [
+ ['「{theme}で、私も［悩み］を感じていた。」→自分の経験を2〜3行→「同じ人いる？」','「うまくできない日もある。」→{theme}にまつわる具体的な一日→気づいたことをひとこと。'],
+ ['「{theme}は［思い込み］だと思っていたけど、私の経験では［気づき］だった。」→背景を2〜3行→「どう思う？」','{theme}の意外な裏側を1つ→実際の場面→自分の見方が変わった理由。'],
+ ['「{theme}でつまずいたとき、［気持ち］だった。」→見直したことを2〜3行→「あなたならどうする？」','あの頃の自分へのひとこと→{theme}での失敗と気づき→次に試した一歩。'],
+ ['「以前は［Before］。今は［After］。」→{theme}で変えたこと→変わっていない課題もひとこと。','{theme}について、以前の考え→転機になった経験→今大切にしていること。'],
+ ['「{theme}で私が意識している3つのこと。」→1・2・3を短く→「どれから試してみたい？」','{theme}の確認ポイントを3行で→自分の経験を1行→あとで振り返る提案。'],
+ ['「{theme}で、私には合わなかったこと。」→当時の条件→代わりに試したこと。','やりすぎていたこと→{theme}で感じた負担→今の自分が選んだ方法。'],
+ ['「{theme}を大切にしている理由。」→きっかけの出来事を2〜3行→今の活動につながる想い。','あの日の小さな出来事→{theme}への気づき→「あなたにも、そんなきっかけはある？」'],
+ ['「{theme}について、正直に思うこと。」→背景にある体験を2〜3行→「あなたはどう感じる？」','言うのをためらっていた本音→{theme}にまつわる経験→これから大切にしたいこと。']
+];
+// ===== ガチャ処理：データはメモリ上のみ。直前IDを参照して再抽選 =====
+const state = {step:0,genre:null,target:null,purpose:null,type:null,phase:'idle',previousId:null,result:null};
+const app = document.getElementById('app');
+const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pick = list => list[Math.floor(Math.random()*list.length)];
+const different = (list, previous) => pick(list.filter(v=>v!==previous));
+const fill = (text,theme) => text.replaceAll('{theme}',theme).replaceAll('［テーマ］',theme);
+function generateResult(){
+ const previous = state.previousId ? JSON.parse(state.previousId) : null;
+ const type = state.type===8 ? pick([0,1,2,3,4,5,6,7]) : state.type;
+ const choices = STRUCTURES.map((s,i)=>s.type===type?i:-1).filter(i=>i>=0);
+ const structureIndex = different(choices,previous?.structureIndex);
+ const structure = STRUCTURES[structureIndex];
+ const categoryPool = [...structure.categories];
+ // 商用フックは活動の紹介に合う構成・目的の組み合わせにだけ混ぜます。
+ if(state.purpose===5 && [6,7].includes(type)) categoryPool.push('service');
+ const hooks = categoryPool.flatMap(c=>HOOKS[c]).filter(h=>type===4 || !/[3３]つ|3選/.test(h));
+ const hook = different(hooks,previous?.hook);
+ const themeIndices = [state.target*3,state.target*3+1,state.target*3+2];
+ const themeIndex = different(themeIndices,previous?.themeIndex);
+ const theme = THEMES[state.genre][themeIndex];
+ const cta = different(CTAS[state.purpose],previous?.cta);
+ state.previousId = JSON.stringify({structureIndex,hook,themeIndex,cta});
+ return {type,name:structure.name,theme,hook:fill(hook,theme),steps:structure.steps.map(([label,text])=>[label,fill(text,theme)]),cta,stories:fill(pick(STORIES[type]),theme),threads:fill(pick(THREADS[type]),theme)};
+}
+function roll(){
+ if(state.phase!=='idle')return;
+ state.phase='rolling';state.result=generateResult();
+ document.getElementById('editConditions').disabled=true;
+ const button=document.getElementById('roll');button.disabled=true;
+ const machine=document.querySelector('#playMachine .machine');machine.classList.add('rolling');
+ document.getElementById('sfx').textContent='ガチャガチャ…';
+ setTimeout(()=>{
+  machine.classList.remove('rolling');state.phase='ready';
+  document.getElementById('sfx').textContent='コロン♪ カプセルをタップしてね♪';
+  const capsule=document.getElementById('capsule');capsule.hidden=false;
+  capsule.style.setProperty('--cap',['#ed929f','#eed178','#b1d5c0','#b9c5e6'][state.result.type%4]);
+  capsule.classList.add('drop');capsule.focus({preventScroll:true});
+  button.textContent='カプセルを開けてみよう ↓';
+ },reducedMotion()?100:1100);
+}
+function openCapsule(){
+ if(state.phase!=='ready')return;
+ state.phase='opening';document.getElementById('capsule').disabled=true;
+ document.getElementById('capsule').classList.add('open');document.getElementById('sfx').textContent='ポン！ 今日のひらめきが出ました♪';
+ document.getElementById('pop').hidden=false;
+ setTimeout(()=>{state.phase='idle';state.step=6;render();},reducedMotion()?100:550);
+}
+// ===== 画面描画処理：DOM挿入時は文字列をエスケープ =====
+const esc = text => String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function machineMarkup(){return `<div class="machine"><div class="machine-top"></div><div class="globe">${['#f0ce72','#e9a0ad','#abd0bb','#b6bfe0','#eaa6a6','#efd288','#a6cbb9','#e9afbe'].map((c,i)=>`<span class="ball" style="--x:${[4,65,125,35,7,70,123,74][i]}px;--c:${c};--r:${[25,-18,30,-25,-25,18,-30,20][i]}deg"></span>`).join('')}</div><div class="machine-body"><div class="machine-label">今日のひらめき、ひとつ。<small>REEL IDEA CAPSULE</small></div><div class="handle"></div><div class="coin"></div><div class="outlet"></div></div><div class="feet"></div><div class="floating-label">何が出るか<br>お楽しみ♪</div></div><div class="shelf"></div>`;}
+function renderHome(){return `<section class="hero"><div class="hero-copy"><p class="eyebrow">A LITTLE IDEA, A NEW REEL.</p><h1 id="screenTitle" tabindex="-1">${esc(APP_TITLE).replace('ガチャガチャ','<br>ガチャガチャ')}</h1><p class="tagline">${TEXT.tagline}</p><p class="intro">ジャンルと目的を選んだら、<br>あとはガチャを回すだけ。<br>今日のリールの“切り口”をポン！と出します。</p><button class="primary" id="start">ガチャを回しにいく♪ <span aria-hidden="true"> →</span></button></div><div class="hero-art"><div class="stage" aria-hidden="true"><div class="halo"></div><span class="spark">✧</span><span class="spark left">✦</span>${machineMarkup()}</div></div></section><div class="trust"><span>✓ 登録いらず</span><span>✓ 何度でも無料</span><span>✓ 入力内容は保存しません</span></div><div class="how"><div><p class="num">01 / CHOOSE</p><b>あなたの発信を選ぶ</b><span>ジャンル・届けたい相手・目的</span></div><div><p class="num">02 / GACHA</p><b>ガチャをくるっと</b><span>どんな切り口に出会える？</span></div><div><p class="num">03 / MAKE IT YOURS</p><b>あなたらしさを足す</b><span>経験と言葉を入れて、構成に。</span></div></div>`;}
+function renderWizard(){
+ const step=state.step;
+ const titles=['','あなたの発信ジャンルは？',state.genre===7?'どんなことを発信したい？':'誰に届けたい？','このリールで、どうなったらうれしい？','今日はどんな切り口にする？'];
+ const notes=['','いちばん近いものを、ひとつ選んでね。',state.genre===7?'まだ決まっていなくても大丈夫。ネタの種を選んでね。':'ひとりの顔を思い浮かべると、言葉が届きやすくなります。','この投稿で目指したいことを、ひとつ。','迷ったら「おまかせ」で、思いがけない出会いを。'];
+ const data=step===1?GENRES.map(g=>g.name):step===2?TARGETS[state.genre]:step===3?PURPOSES:TYPES;
+ const key=['','genre','target','purpose','type'][step];
+ return `<section class="wizard"><div class="progress" aria-label="全4問中${step}問目">${[1,2,3,4].map(n=>`<span class="${n<=step?'done':''}"></span>`).join('')}</div><p class="eyebrow">STEP 0${step} / 04</p><h2 id="screenTitle" tabindex="-1">${titles[step]}</h2><p class="question-note">${notes[step]}</p><div class="choices ${[2,3].includes(step)?'single':''}" role="group" aria-labelledby="screenTitle">${data.map((label,i)=>`<button class="choice" data-choice="${i}" aria-pressed="${state[key]===i}">${step===1?`<span class="choice-icon" aria-hidden="true">${GENRES[i].icon}</span>`:''}<span>${esc(label)}</span><span class="checkmark" aria-hidden="true">${state[key]===i?'✓':''}</span></button>`).join('')}</div><div class="nav"><button class="text-button" id="back">← 戻る</button><button class="primary" id="next" ${state[key]===null?'disabled':''}>${step===4?'ガチャへ進む':'次へ'} →</button></div></section>`;
+}
+function renderGacha(){return `<section class="gacha-screen"><p class="eyebrow">LET’S TURN YOUR IDEA!</p><h2 id="screenTitle" tabindex="-1">今日のひらめき、<br>何が出るかな？</h2><p class="selection-summary">${esc(GENRES[state.genre].name)}<br>${esc(PURPOSES[state.purpose])} · ${esc(TYPES[state.type])}</p><div class="stage" id="playMachine"><div aria-hidden="true">${machineMarkup()}</div></div><p class="sfx" id="sfx" role="status" aria-live="polite">ハンドルを回して、ひらめきを取り出そう。</p><button class="primary" id="roll">ガチャを回す！</button><div class="gacha-space"><button class="capsule" id="capsule" aria-label="カプセルを開いて結果を見る" hidden><span class="upper"></span><span class="lower"></span></button><span class="pop" id="pop" hidden aria-hidden="true">ポン！ ✦</span></div><button class="text-button" id="editConditions">← 選んだ条件を見直す</button></section>`;}
+function renderResult(){
+ const r=state.result;
+ const checks=['本当にその言葉、お客様が使う？','冒頭で指が止まる？','あなた自身の経験が入ってる？','画角はこれで伝わる？','テロップは読みやすい？','最後にしてほしい行動が伝わる？'];
+ const rows=[['冒頭 0〜3秒',r.hook],...r.steps,['最後のCTA',r.cta]];
+ return `<section class="result"><div class="result-heading"><p class="eyebrow">YOUR REEL IDEA</p><h2 id="screenTitle" tabindex="-1">今日のリール構成</h2><p class="small">＼ 今日のリールはこれ！ ／</p><span class="badge">${esc(r.name)}</span></div><article class="result-card"><p class="eyebrow">TODAY’S THEME</p><h3 class="theme">${esc(r.theme)}</h3><div class="context"><span>ジャンル：${esc(GENRES[state.genre].name)}</span><span>${state.genre===7?'ネタの種':'届けたい相手'}：${esc(TARGETS[state.genre][state.target])}</span><span>目的：${esc(PURPOSES[state.purpose])}</span></div>${rows.map(([label,text])=>`<div class="script-row"><h3>${esc(label)}</h3><p>${esc(text)}</p></div>`).join('')}<p class="edit-hint">［ ］は、あなたの言葉を入れるところ。選んだ${state.genre===7?'ネタの種':'相手'}を思い浮かべて、実際の経験や具体例を足してね。内容に合わせて冒頭の言葉も調整できます。</p></article><div class="actions"><button class="primary" id="again">もう一回ガチャる♪</button><button class="secondary" id="copy">構成をコピーする</button><span class="copy-status" id="copyStatus" role="status"></span><button class="text-button" id="change">ジャンル・条件を変更する</button></div><p class="notice">${TEXT.disclaimer}</p><section class="section"><p class="eyebrow">このまま投稿する前に…</p><h2>人間の目を入れよう！</h2><div class="checklist">${checks.map(c=>`<label><input type="checkbox">${c}</label>`).join('')}</div><div class="human-message"><p>AIやテンプレートで「構成」は速く作れます。</p><p>でも、<br>「本当にこの冒頭で見る？」<br>「この言葉、お客様が使う？」<br>「あなたらしさは入ってる？」</p><p><strong>最後に必要なのは、人間の目です。</strong></p></div></section><section class="section reuse"><p class="eyebrow">ONE IDEA, MORE STORIES.</p><h2>このネタ、<br>リールだけで終わらせない♪</h2><p class="small" style="margin-top:12px">リール → Stories → Threads</p><div class="reuse-item"><h3>01 / Stories</h3><p>${esc(r.stories)}</p></div><div class="reuse-item"><h3>02 / Threads</h3><p>${esc(r.threads)}</p></div></section><section class="section course"><p class="eyebrow">ここから、もう一歩。</p><h2>ガチャで“構成”は作れる。<br>でも、“見られる動画”に<br>するのはここから。</h2><p>AIやテンプレートは、<br>ネタ出しや構成を速くするのが得意です。</p><p>でも、<br>この冒頭なら本当に見る？<br>この画角なら指が止まる？<br>テロップは1段？2段？<br>この言葉はお客様に響く？</p><p>そんな最後の判断には、<br><strong>人間の目とマーケティング視点</strong>が必要です。</p><p>無料講座では、AIで時短しながら<br>『見られる・伝わるリール』に仕上げる方法を<br>実例を使ってお伝えします。</p><a id="courseLink" class="primary" href="#">無料で“見られるリール”の作り方を学ぶ</a><p class="small" id="courseStatus" role="status">${FREE_COURSE_URL==='#'?'無料講座のご案内は、ただいま準備中です。':''}</p></section></section>`;
+}
+function resultText(){const r=state.result;return `${APP_TITLE}\n今日のリール構成【${r.name}】\nテーマ：${r.theme}\nジャンル：${GENRES[state.genre].name}\n${state.genre===7?'ネタの種':'届けたい相手'}：${TARGETS[state.genre][state.target]}\n目的：${PURPOSES[state.purpose]}\n\n`+[['冒頭 0〜3秒',r.hook],...r.steps,['最後のCTA',r.cta],['Stories',r.stories],['Threads',r.threads]].map(([l,t])=>`■${l}\n${t}`).join('\n\n');}
+async function copyResult(){
+ const text=resultText();
+ try{if(!navigator.clipboard?.writeText)throw new Error('manual');await navigator.clipboard.writeText(text);document.getElementById('copyStatus').textContent='構成をコピーしました♪';}
+ catch{const dialog=document.getElementById('copyDialog');document.getElementById('copyText').value=text;dialog.showModal();document.getElementById('copyText').select();}
+}
+function render(focus=true){
+ app.innerHTML=state.step===0?renderHome():state.step<=4?renderWizard():state.step===5?renderGacha():renderResult();
+ const on=(id,fn)=>document.getElementById(id)?.addEventListener('click',fn);
+ on('start',()=>{state.step=1;render();});
+ on('back',()=>{state.step--;render();});on('next',()=>{state.step++;render();});
+ document.querySelectorAll('[data-choice]').forEach(button=>button.addEventListener('click',()=>{
+  const key=['','genre','target','purpose','type'][state.step],value=Number(button.dataset.choice);
+  if(key==='genre' && state.genre!==value)state.target=null;
+  state[key]=value;
+  // 選択時はフォーカスを維持し、次へボタンを有効化。
+  document.querySelectorAll('[data-choice]').forEach(b=>{const selected=Number(b.dataset.choice)===value;b.setAttribute('aria-pressed',String(selected));b.querySelector('.checkmark').textContent=selected?'✓':'';});
+  document.getElementById('next').disabled=false;
+ }));
+ on('roll',roll);on('capsule',openCapsule);
+ on('editConditions',()=>{if(state.phase!=='idle')return;state.step=4;render();});
+ on('again',()=>{state.step=5;state.phase='idle';render();roll();});
+ on('change',()=>{state.step=1;render();});on('copy',copyResult);
+ const link=document.getElementById('courseLink');
+ if(link){
+  // http(s)のURLのみ利用。未設定時はページを移動せず案内を表示。
+  let valid=false;try{valid=/^https?:$/.test(new URL(FREE_COURSE_URL).protocol);}catch{}
+  if(valid){link.href=FREE_COURSE_URL;link.rel='noopener noreferrer';}
+  else{link.addEventListener('click',e=>{e.preventDefault();document.getElementById('courseStatus').textContent='無料講座は準備中です。公開まで、ガチャを楽しんでね♪';});}
+ }
+ if(focus){window.scrollTo({top:0,behavior:'instant'});document.getElementById('screenTitle')?.focus({preventScroll:true});}
+}
+document.getElementById('closeDialog').addEventListener('click',()=>document.getElementById('copyDialog').close());
+document.title=APP_TITLE;
+render(false);
+</script>
+</body>
+</html>
+
